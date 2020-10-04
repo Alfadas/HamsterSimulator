@@ -96,9 +96,9 @@ public class HamsterManager : MonoBehaviour
 
     private void Update()
     {
-        if(currentState == State.charging)
+        if (currentState == State.charging)
         {
-            wheel.localRotation =  Quaternion.Euler(wheel.localRotation.eulerAngles  + Vector3.down);
+            wheel.localRotation = Quaternion.Euler(wheel.localRotation.eulerAngles + Vector3.down);
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -114,11 +114,11 @@ public class HamsterManager : MonoBehaviour
         }
         else if (food <= 0 || water <= 0 || sleep <= 0 || sozial <= 0)
         {
-            EndGame("You died!", "After " + (time / 144) + " Days, " + (time % 144) / 6 + " hours, and " + time % 6 + "0 minutes you collapse, hoping someone else will continue your duty.", Color.red, false);
+            EndGame("You died!", "After " + (time / 144) + " Days, " + (time % 144) / 6 + " hours, and " + time % 6 + "0 minutes you collapse, trying to do more than you can alone. Don't struggle alone, ask for help.", Color.red, false);
         }
         else if (batteryPower >= 950 && food >= 950 && water >= 950 && sleep >= 950 && sozial >= 950)
         {
-            EndGame("Perfectly balanced", "In " + (time / 144) + " Days, " + (time % 144) / 6 + " hours, and " + time % 6 + "0 minutes you balance your life, continuing your duty easily for a long time.", Color.green, true);
+            EndGame("Lights on Forever", "In " + (time / 144) + " Days, " + (time % 144) / 6 + " hours, and " + time % 6 + "0 minutes you changed your life, continuing your duty easily for a long time.", Color.green, true);
         }
     }
 
@@ -165,7 +165,7 @@ public class HamsterManager : MonoBehaviour
         if (currentState == State.charging)
         {
             batteryPower += Mathf.CeilToInt(charge * ((float)wheelPerformance / cap));
-            if(batteryPower >= cap)
+            if (batteryPower >= cap)
             {
                 batteryPower = cap;
             }
@@ -200,6 +200,26 @@ public class HamsterManager : MonoBehaviour
             if (sozial >= cap)
             {
                 sozial = cap;
+                batteryPower += Mathf.CeilToInt(charge * ((float)wheelPerformance / cap));
+                water += drink;
+                food += eat;
+                sleep += sleeping;
+                if (sleep >= cap)
+                {
+                    sleep = cap;
+                }
+                if (food >= cap)
+                {
+                    food = cap;
+                }
+                if (water >= cap)
+                {
+                    water = cap;
+                }
+                if (batteryPower >= cap)
+                {
+                    batteryPower = cap;
+                }
             }
         }
     }
@@ -234,14 +254,15 @@ public class HamsterManager : MonoBehaviour
     public void StartGame()
     {
         StopAllCoroutines();
-        food = 850;
+        food = 900;
         water = 750;
-        sozial = 1000;
-        sleep = 800;
+        sozial = 900;
+        sleep = 850;
         batteryPower = 600;
         wheelPerformance = 1000;
 
         time = 0;
+        lamp.gameObject.SetActive(true);
         endCanvas.gameObject.SetActive(false);
         menuCanvas.gameObject.SetActive(false);
         tutorial.gameObject.SetActive(false);

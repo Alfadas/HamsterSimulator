@@ -7502,16 +7502,16 @@ MonoBehaviour:
   chargingPos: {fileID: 1374632266}
   sleepingPos: {fileID: 1937530236}
   cap: 1000
-  charge: 33
-  eat: 40
-  drink: 65
-  sozialize: 11
-  sleeping: 18
-  discharge: 10
-  foodUse: 7
-  waterUse: 16
-  sozialUse: 2
-  sleepUse: 4
+  charge: 55
+  eat: 75
+  drink: 110
+  sozialize: 20
+  sleeping: 25
+  discharge: 15
+  foodUse: 12
+  waterUse: 25
+  sozialUse: 4
+  sleepUse: 6
 --- !u!4 &1778110974
 Transform:
   m_ObjectHideFlags: 0
