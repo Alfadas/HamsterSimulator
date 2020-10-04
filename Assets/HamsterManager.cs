@@ -13,12 +13,12 @@ public enum State
 }
 public class HamsterManager : MonoBehaviour
 {
-    int food = 900;
-    int water = 800;
-    int sozial = 1000;
-    int sleep = 800;
-    int batteryPower = 600;
-    int wheelPerformance = 1000;
+    int food = 0;
+    int water = 0;
+    int sozial = 0;
+    int sleep = 0;
+    int batteryPower = 0;
+    int wheelPerformance = 0;
 
     int time = 0;
 
@@ -28,6 +28,14 @@ public class HamsterManager : MonoBehaviour
     [SerializeField] Transform wheel;
     [SerializeField] Transform lamp;
     [SerializeField] Canvas tutorial;
+    [SerializeField] Canvas menuCanvas;
+    [Header("Audio")]
+    [SerializeField] AudioSource musikSource;
+    [SerializeField] AudioSource sfxSource;
+    [SerializeField] Slider slider;
+    [SerializeField] AudioClip[] sfx;
+    [SerializeField] Text musikButtonText;
+    [SerializeField] Text sfxButtonText;
     [Header("Ui")]
     [SerializeField] Text timeText;
     [SerializeField] Text dayText;
@@ -63,6 +71,11 @@ public class HamsterManager : MonoBehaviour
     [SerializeField] int sozialUse = 5;
     [SerializeField] int sleepUse = 5;
 
+    void Start()
+    {
+        ChangeVolume(0.5f);
+    }
+
     IEnumerator Tick()
     {
         while (true)
@@ -86,6 +99,10 @@ public class HamsterManager : MonoBehaviour
         if(currentState == State.charging)
         {
             wheel.localRotation =  Quaternion.Euler(wheel.localRotation.eulerAngles  + Vector3.down);
+        }
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            menuCanvas.gameObject.SetActive(!menuCanvas.gameObject.activeSelf);
         }
     }
 
@@ -190,6 +207,8 @@ public class HamsterManager : MonoBehaviour
     public void SetState(int state)
     {
         currentState = (State)state;
+        sfxSource.clip = sfx[state];
+        sfxSource.Play();
         if (currentState == State.charging)
         {
             ChangeTransform(chargingPos);
@@ -214,6 +233,17 @@ public class HamsterManager : MonoBehaviour
 
     public void StartGame()
     {
+        StopAllCoroutines();
+        food = 850;
+        water = 750;
+        sozial = 1000;
+        sleep = 800;
+        batteryPower = 600;
+        wheelPerformance = 1000;
+
+        time = 0;
+        endCanvas.gameObject.SetActive(false);
+        menuCanvas.gameObject.SetActive(false);
         tutorial.gameObject.SetActive(false);
         buttonHolder.SetActive(true);
         mainCanvas.gameObject.SetActive(true);
@@ -225,5 +255,46 @@ public class HamsterManager : MonoBehaviour
     {
         hamster.position = refTransform.position;
         hamster.rotation = refTransform.rotation;
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
+    public void ToggleSFX()
+    {
+        sfxSource.enabled = !sfxSource.enabled;
+        if (sfxSource.enabled)
+        {
+            sfxButtonText.text = "Disable SFX";
+        }
+        else
+        {
+            sfxButtonText.text = "Enable SFX";
+        }
+    }
+
+    public void ToggleMusik()
+    {
+        musikSource.enabled = !musikSource.enabled;
+        if (musikSource.enabled)
+        {
+            musikButtonText.text = "Disable Musik";
+        }
+        else
+        {
+            musikButtonText.text = "Enable Musik";
+        }
+    }
+
+    public void ChangeVolume(float volume)
+    {
+        if (volume == -1f)
+        {
+            volume = slider.value;
+        }
+        sfxSource.volume = volume * 0.5f;
+        musikSource.volume = volume * 0.5f;
     }
 }
